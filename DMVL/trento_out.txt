@@ -1,0 +1,266 @@
+======================================================================
+  DMVL Trento - Complete Pipeline
+  Deep Multiview Learning for Hyperspectral Image Classification
+======================================================================
+
+======================================================================
+  STEP: Data Generation (80/20 split, extracting patches)
+======================================================================
+
+Loading Trento dataset...
+Image shape: (166, 600, 63)
+Ground truth shape: (166, 600)
+Number of bands: 63
+Unique classes: [0 1 2 3 4 5 6]
+Total labeled pixels: 30214
+View 1 bands: 0-30 (31 bands)
+View 2 bands: 31-62 (32 bands)
+PCA completed. View1 shape: (166, 600, 3), View2 shape: (166, 600, 3)
+
+Creating 80/20 stratified train/test split...
+Training samples: 24171 (80%)
+Test samples: 6043 (20%)
+
+Extracting training patches (TR)...
+Training data shape: (24171, 4704)
+Training labels shape: (24171,)
+Training label range: 0 to 5
+
+Extracting test patches (TE)...
+Test data shape: (6043, 4704)
+Test labels shape: (6043,)
+Test label range: 0 to 5
+
+Saved training data to data/Trento28-28-6_train.h5
+Saved test data to data/Trento28-28-6_test.h5
+
+=== Data Generation Complete ===
+Training samples: 24171 (80% split)
+Test samples: 6043 (20% split)
+Number of classes: 6
+Patch size: 28x28x6
+
+✅ Data Generation (80/20 split, extracting patches) completed in 4.68 seconds
+
+======================================================================
+  STEP: Pretraining (Contrastive Learning) + Feature Extraction
+======================================================================
+
+Training data: (24171, 4704), labels: (24171,)
+Label range: 0 to 5, unique classes: 6
+# Model loaded with feature_dim=128
+
+=== Starting Pretraining ===
+Epochs: 50, Batch size: 128
+Train Epoch: [1/50] Loss: 5.1992: 100%|███████| 188/188 [01:51<00:00,  1.68it/s]
+Train Epoch: [2/50] Loss: 4.9238: 100%|███████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [3/50] Loss: 4.7722: 100%|███████| 188/188 [01:49<00:00,  1.72it/s]
+Train Epoch: [4/50] Loss: 4.6702: 100%|███████| 188/188 [01:49<00:00,  1.72it/s]
+Train Epoch: [5/50] Loss: 4.5987: 100%|███████| 188/188 [01:51<00:00,  1.69it/s]
+Train Epoch: [6/50] Loss: 4.5532: 100%|███████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [7/50] Loss: 4.4962: 100%|███████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [8/50] Loss: 4.4617: 100%|███████| 188/188 [01:49<00:00,  1.72it/s]
+Train Epoch: [9/50] Loss: 4.4307: 100%|███████| 188/188 [01:49<00:00,  1.72it/s]
+Train Epoch: [10/50] Loss: 4.4038: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [11/50] Loss: 4.3833: 100%|██████| 188/188 [01:49<00:00,  1.72it/s]
+Train Epoch: [12/50] Loss: 4.3570: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [13/50] Loss: 4.3472: 100%|██████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [14/50] Loss: 4.3296: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [15/50] Loss: 4.3169: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [16/50] Loss: 4.3024: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [17/50] Loss: 4.2916: 100%|██████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [18/50] Loss: 4.2825: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [19/50] Loss: 4.2734: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [20/50] Loss: 4.2746: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [21/50] Loss: 4.2663: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [22/50] Loss: 4.2502: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [23/50] Loss: 4.2456: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [24/50] Loss: 4.2424: 100%|██████| 188/188 [01:50<00:00,  1.69it/s]
+Train Epoch: [25/50] Loss: 4.2433: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [26/50] Loss: 4.2308: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [27/50] Loss: 4.2197: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [28/50] Loss: 4.2244: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [29/50] Loss: 4.2078: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [30/50] Loss: 4.2039: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [31/50] Loss: 4.1982: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [32/50] Loss: 4.1857: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [33/50] Loss: 4.1794: 100%|██████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [34/50] Loss: 4.1711: 100%|██████| 188/188 [01:49<00:00,  1.71it/s]
+Train Epoch: [35/50] Loss: 4.1671: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [36/50] Loss: 4.1595: 100%|██████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [37/50] Loss: 4.1511: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [38/50] Loss: 4.1386: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [39/50] Loss: 4.1370: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [40/50] Loss: 4.1289: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [41/50] Loss: 4.1218: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [42/50] Loss: 4.1150: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [43/50] Loss: 4.1043: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [44/50] Loss: 4.1102: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [45/50] Loss: 4.0953: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [46/50] Loss: 4.0914: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [47/50] Loss: 4.0899: 100%|██████| 188/188 [01:50<00:00,  1.71it/s]
+Train Epoch: [48/50] Loss: 4.0801: 100%|██████| 188/188 [01:50<00:00,  1.70it/s]
+Train Epoch: [49/50] Loss: 4.0736: 100%|██████| 188/188 [01:49<00:00,  1.72it/s]
+Train Epoch: [50/50] Loss: 4.0757: 100%|██████| 188/188 [01:48<00:00,  1.73it/s]
+
+Model saved to results/128_0.5_200_128_50_trento_model.pth
+
+=== Extracting Training Features ===
+Training features shape: (24171, 128)
+Training labels shape: (24171,)
+Saved training features to data/Trento_feature_train.h5
+
+=== Extracting Test Features ===
+Test features shape: (6043, 128)
+Test labels shape: (6043,)
+Saved test features to data/Trento_feature_test.h5
+
+=== Training Complete ===
+
+✅ Pretraining (Contrastive Learning) + Feature Extraction completed in 5532.82 seconds
+
+======================================================================
+  STEP: Few-shot SVM Evaluation (1, 5, 10 shots)
+======================================================================
+
+=== Loading Features ===
+Training features: (24171, 128)
+Training labels: (24171,), range: 0-5
+Test features: (6043, 128)
+Test labels: (6043,), range: 0-5
+
+============================================================
+=== Few-shot Setting: 1 samples per class ===
+============================================================
+Few-shot training samples: 6
+Classes sampled: 6
+1-shot: Using fixed SVM params - no CV possible
+Training time: 0.00s
+Best params: C=1.0, gamma='scale' (fixed)
+Best CV score: N/A (no CV for 1-shot)
+
+Confusion Matrix:
+[[ 625    0  163    0   19    0]
+ [   0  390    0    0    0  190]
+ [   0    0   82    0    0   14]
+ [   0    0   96 1729    0    0]
+ [ 908    7  333    4  841    7]
+ [   0  226   36    0   61  312]]
+
+OA = 65.84%
+[[ 625    0  163    0   19    0]
+ [   0  390    0    0    0  190]
+ [   0    0   82    0    0   14]
+ [   0    0   96 1729    0    0]
+ [ 908    7  333    4  841    7]
+ [   0  226   36    0   61  312]]
+Pe =  0.19430391423109286
+[1533.  623.  710. 1733.  921.  523.]
+[40.769733 62.60032  11.549295 99.76919  91.31379  59.655834]
+AA:  60.94302535057068
+AA = 60.94%
+Kappa = 57.61%
+Prediction time: 0.01s
+
+============================================================
+=== Few-shot Setting: 5 samples per class ===
+============================================================
+Few-shot training samples: 30
+Classes sampled: 6
+Using 3-fold cross-validation
+Training time: 0.53s
+Best params: {'C': 4.0, 'gamma': 4.0}
+Best CV score: 0.6333
+
+Confusion Matrix:
+[[ 673    0  128    0    6    0]
+ [   0  495    0    0    0   85]
+ [   3    0   92    0    1    0]
+ [   0    0    0 1825    0    0]
+ [ 152    0   19    5 1667  257]
+ [   0   44   70    0    0  521]]
+
+OA = 87.26%
+[[ 673    0  128    0    6    0]
+ [   0  495    0    0    0   85]
+ [   3    0   92    0    1    0]
+ [   0    0    0 1825    0    0]
+ [ 152    0   19    5 1667  257]
+ [   0   44   70    0    0  521]]
+Pe =  0.23039788022563978
+[ 828.  539.  309. 1830. 1674.  863.]
+[81.2802   91.83673  29.773462 99.726776 99.58184  60.370796]
+AA:  77.094966173172
+AA = 77.09%
+Kappa = 83.44%
+Prediction time: 0.02s
+
+============================================================
+=== Few-shot Setting: 10 samples per class ===
+============================================================
+Few-shot training samples: 60
+Classes sampled: 6
+Using 3-fold cross-validation
+Training time: 0.59s
+Best params: {'C': 16.0, 'gamma': 0.25}
+Best CV score: 0.8333
+
+Confusion Matrix:
+[[ 651    0  155    0    0    1]
+ [   0  573    0    0    0    7]
+ [   1    0   86    0    0    9]
+ [   0    0    0 1766    0   59]
+ [ 159    5   61    0 1863   12]
+ [   0  111   31    0    0  493]]
+
+OA = 89.89%
+[[ 651    0  155    0    0    1]
+ [   0  573    0    0    0    7]
+ [   1    0   86    0    0    9]
+ [   0    0    0 1766    0   59]
+ [ 159    5   61    0 1863   12]
+ [   0  111   31    0    0  493]]
+Pe =  0.2352342822820698
+[ 811.  689.  333. 1766. 1863.  581.]
+[ 80.27127   83.16401   25.825825 100.       100.        84.85371 ]
+AA:  79.01913523674011
+AA = 79.02%
+Kappa = 86.78%
+Prediction time: 0.04s
+
+============================================================
+=== FINAL RESULTS SUMMARY ===
+============================================================
+
+Shots      OA (%)          AA (%)          Kappa (%)      
+-------------------------------------------------------
+1          65.84           60.94           57.61          
+5          87.26           77.09           83.44          
+10         89.89           79.02           86.78          
+
+Results saved to Trento/Trento_results.txt
+=== Evaluation Complete ===
+
+✅ Few-shot SVM Evaluation (1, 5, 10 shots) completed in 2.74 seconds
+
+======================================================================
+  PIPELINE COMPLETE!
+======================================================================
+
+⏱️  Time Summary:
+   - Data Generation:    4.68s
+   - Pretraining:        5532.82s
+   - Evaluation:         2.74s
+   - TOTAL:              5540.24s (92.34 min)
+
+📁 Output Files:
+   - data/Trento28-28-6_train.h5  (Training patches)
+   - data/Trento28-28-6_test.h5   (Test patches)
+   - data/Trento_feature_train.h5 (Training features)
+   - data/Trento_feature_test.h5  (Test features)
+   - results/*_trento_model.pth   (Trained model)
+   - Trento/Trento_results.txt   (Results)
+
+======================================================================
+  Check Trento/Trento_results.txt for final metrics!
+======================================================================

@@ -1,0 +1,173 @@
+# DMVL Adaptations Notes
+# Date: 2025-12-31
+
+This directory contains DMVL implementations for different datasets:
+- DMVL-main: Original implementation (Indian Pines)
+- DMVL-houston: Adapted for Houston dataset
+- DMVL-trento: Adapted for Trento dataset
+- DMVL-cross-scene: Adapted for Cross-Scene (Houston-13/Houston-18)
+- DMVL-hyrank: Adapted for HyRank (Dioni/Loukia)
+
+---
+
+## HOUSTON (DMVL-houston/)
+
+### Dataset Parameters:
+- Spectral bands: 144 → split into 72+72
+- Classes: 15 (excluding background)
+- patch_size: 14 (creates 28×28 patches)
+- pca_components: 3 (per view, 6 total channels)
+- TR/TE split: Predefined in .mat file
+- Mat file keys: 'input', 'TR', 'TE'
+- Training samples: 2,832
+- Test samples: 12,197
+
+### Changes from Original:
+- seed=42 for reproducibility
+- epochs: 50, batch_size: 128
+- Training loop ENABLED (was commented out!)
+- Pretrain on TR only (no data leakage)
+
+### How to Run:
+```
+cd DMVL-houston
+# Place houston.mat in ./data/houston.mat
+python run.py
+```
+
+---
+
+## TRENTO (DMVL-trento/)
+
+### Dataset Parameters:
+- Spectral bands: 63 → split into 31+32
+- Classes: 6 (excluding background)
+- patch_size: 14 (creates 28×28 patches)
+- pca_components: 3 (per view, 6 total channels)
+- TR/TE split: Created as 80/20 stratified (no predefined split)
+- Mat file keys: 'HSI_data', 'ground'
+- Training samples: ~24,171 (80%)
+- Test samples: ~6,043 (20%)
+
+### Changes from Houston:
+- Different band split (31+32 instead of 72+72)
+- Create 80/20 stratified split (Trento has no predefined)
+- 6 classes instead of 15
+
+### How to Run:
+```
+cd DMVL-trento
+# Place trento.mat in ./data/trento.mat
+python run.py
+```
+
+---
+
+## CROSS-SCENE (DMVL-cross-scene/)
+
+### Dataset Parameters:
+- Spectral bands: 48 → split into 24+24
+- Classes: 7 (excluding background)
+- patch_size: 14 (creates 28×28 patches)
+- pca_components: 3 (per view, 6 total channels)
+- Houston-13 (source): 2,530 labeled pixels
+- Houston-18 (target): 53,200 labeled pixels → 80/20 split
+- Mat file format: HDF5 (use h5py)
+- Mat file keys: 'ori_data', 'map'
+
+### Experiment Design:
+- Pretraining: All Houston-13 patches (2,530)
+- Exp1 (Zero-shot): Few-shots from H13, test on H18 test
+- Exp2 (Few-shot): Few-shots from H18 train, test on H18 test
+
+### Changes from Houston:
+- HDF5 loading with h5py (not scipy.io)
+- Band split: 24+24 (48 bands)
+- 7 classes instead of 15
+- Two experiments (zero-shot and few-shot)
+
+### How to Run:
+```
+cd DMVL-cross-scene
+# Place Houston13.mat, Houston13_7gt.mat, Houston18.mat, Houston18_7gt.mat in ./data/
+python run.py
+```
+
+---
+
+## HYRANK (DMVL-hyrank/)
+
+### Dataset Parameters:
+- Spectral bands: 176 → split into 88+88
+- Classes: 12 (excluding background)
+- patch_size: 14 (creates 28×28 patches)
+- pca_components: 3 (per view, 6 total channels)
+- Dioni (source): 20,024 labeled pixels (250×1376)
+- Loukia (target): 10,317 labeled pixels (249×945) → 80/20 split
+- Mat file format: MATLAB v5 (use scipy.io)
+- Mat file keys: 'ori_data', 'map'
+
+### Experiment Design:
+- Pretraining: All Dioni patches (20,024)
+- Exp1 (Zero-shot): Few-shots from Dioni, test on Loukia test
+- Exp2 (Few-shot): Few-shots from Loukia train, test on Loukia test
+
+### Changes from Cross-Scene:
+- scipy.io.loadmat() instead of h5py
+- No transpose needed
+- Normalize raw uint16 data
+- Band split: 88+88 (176 bands)
+- 12 classes instead of 7
+- Different spatial dimensions for source/target
+
+### How to Run:
+```
+cd DMVL-hyrank
+# Place Dioni.mat, Dioni_gt_out68.mat, Loukia.mat, Loukia_gt_out68.mat in ./data/
+python run.py
+```
+
+---
+
+## DATA LEAKAGE PREVENTION (All Datasets)
+
+| Step | Protocol |
+|------|----------|
+| Pretraining | Uses only TR patches |
+| Features | Extracted separately for train and test |
+| Few-shot | Samples from TR features only |
+| Evaluation | Tests on TE features only |
+
+---
+
+## KEY INSIGHTS
+
+1. **Training loop was COMMENTED OUT in original** - now enabled
+2. **Original evaluated on ALL data** (data leakage) - now TR/TE separate
+3. **seed=42** for reproducibility (single run, no averaging)
+4. **PCA with min-max normalization** after reducing to 3 components per view
+5. **Patch size: 28×28×6** (14×2 for each dimension, 3 PCA + 3 PCA = 6 channels)
+
+---
+
+## COMPARISON TABLE
+
+| Parameter | Houston | Trento | Cross-Scene | HyRank |
+|-----------|---------|--------|-------------|--------|
+| Bands | 144 | 63 | 48 | 176 |
+| Band split | 72+72 | 31+32 | 24+24 | 88+88 |
+| Classes | 15 | 6 | 7 | 12 |
+| Split | Predefined | 80/20 | H13/H18 80/20 | Dioni/Loukia 80/20 |
+| Mat keys | input,TR,TE | HSI_data,ground | ori_data,map | ori_data,map |
+| Loading | scipy | scipy | h5py | scipy |
+
+---
+
+## RESULTS COMPARISON
+
+See individual output files:
+- Houston: DMVL-houston/Houston/Houston_results.txt
+- Trento: DMVL-trento/Trento/Trento_results.txt
+- Cross-Scene: DMVL-cross-scene/CrossScene/CrossScene_results.txt
+- HyRank: DMVL-hyrank/HyRank/HyRank_results.txt
+

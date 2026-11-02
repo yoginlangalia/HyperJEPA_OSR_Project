@@ -1,0 +1,431 @@
+======================================================================
+  DMVL Cross-Scene - Complete Pipeline
+  Houston-13 (Source) → Houston-18 (Target)
+======================================================================
+
+======================================================================
+  STEP: Data Generation (H13 pretrain, H18 80/20 split)
+======================================================================
+
+=== Loading Houston-13 (Source Domain) ===
+Houston-13 Image shape: (210, 954, 48)
+Houston-13 GT shape: (210, 954)
+Houston-13 Classes: [0 1 2 3 4 5 6 7]
+Houston-13 Labeled pixels: 2530
+
+=== Loading Houston-18 (Target Domain) ===
+Houston-18 Image shape: (210, 954, 48)
+Houston-18 GT shape: (210, 954)
+Houston-18 Classes: [0 1 2 3 4 5 6 7]
+Houston-18 Labeled pixels: 53200
+
+=== Processing Houston-13 ===
+Band split: 48 → 24+24
+PCA completed. View1: (210, 954, 3), View2: (210, 954, 3)
+Extracting Houston-13 patches (ALL labeled for pretraining)...
+Houston-13 pretrain data: (2530, 4704)
+Houston-13 labels: (2530,), range: 0-6
+
+=== Processing Houston-18 ===
+PCA completed. View1: (210, 954, 3), View2: (210, 954, 3)
+
+Creating 80/20 stratified train/test split...
+Houston-18 Train samples: 42560 (80%)
+Houston-18 Test samples: 10640 (20%)
+
+Houston-18 class distribution:
+  Class 1: Train=1082, Test=271
+  Class 2: Train=3910, Test=978
+  Class 3: Train=2213, Test=553
+  Class 4: Train=18, Test=4
+  Class 5: Train=4278, Test=1069
+  Class 6: Train=25967, Test=6492
+  Class 7: Train=5092, Test=1273
+
+Extracting Houston-18 TRAIN patches...
+Houston-18 train data: (42560, 4704)
+Houston-18 train labels: (42560,), range: 0-6
+
+Extracting Houston-18 TEST patches...
+Houston-18 test data: (10640, 4704)
+Houston-18 test labels: (10640,), range: 0-6
+
+=== Saving Data ===
+Saved: data/Houston13_pretrain.h5 (2530 samples)
+Saved: data/Houston18_train.h5 (42560 samples)
+Saved: data/Houston18_test.h5 (10640 samples)
+
+=== Data Generation Complete ===
+Houston-13 pretrain: 2530 samples (for pretraining)
+Houston-18 train: 42560 samples (for Exp2 few-shot)
+Houston-18 test: 10640 samples (for evaluation)
+Number of classes: 7
+Patch size: 28x28x6
+
+✅ Data Generation (H13 pretrain, H18 80/20 split) completed in 11.96 seconds
+
+======================================================================
+  STEP: Pretraining on H13 + Feature Extraction
+======================================================================
+
+=== Loading Houston-13 for Pretraining ===
+Pretrain data: (2530, 4704), labels: (2530,)
+Label range: 0 to 6, unique classes: 7
+# Model loaded with feature_dim=128
+
+=== Starting Pretraining on Houston-13 ===
+Epochs: 50, Batch size: 128
+Train Epoch: [1/50] Loss: 5.4801: 100%|█████████| 19/19 [00:13<00:00,  1.45it/s]
+Train Epoch: [2/50] Loss: 5.4509: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [3/50] Loss: 5.4465: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [4/50] Loss: 5.4106: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [5/50] Loss: 5.4331: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [6/50] Loss: 5.4184: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [7/50] Loss: 5.4268: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [8/50] Loss: 5.4444: 100%|█████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [9/50] Loss: 5.4066: 100%|█████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [10/50] Loss: 5.4133: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [11/50] Loss: 5.4124: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [12/50] Loss: 5.4045: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [13/50] Loss: 5.4283: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [14/50] Loss: 5.4222: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [15/50] Loss: 5.3865: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [16/50] Loss: 5.4066: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [17/50] Loss: 5.3992: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [18/50] Loss: 5.3836: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [19/50] Loss: 5.3623: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [20/50] Loss: 5.3693: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [21/50] Loss: 5.3694: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [22/50] Loss: 5.3595: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [23/50] Loss: 5.3367: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [24/50] Loss: 5.3606: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [25/50] Loss: 5.3358: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [26/50] Loss: 5.3330: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [27/50] Loss: 5.3365: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [28/50] Loss: 5.3468: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [29/50] Loss: 5.3209: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [30/50] Loss: 5.3075: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [31/50] Loss: 5.2845: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [32/50] Loss: 5.2568: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [33/50] Loss: 5.2640: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [34/50] Loss: 5.1987: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [35/50] Loss: 5.2131: 100%|████████| 19/19 [00:11<00:00,  1.63it/s]
+Train Epoch: [36/50] Loss: 5.1734: 100%|████████| 19/19 [00:11<00:00,  1.63it/s]
+Train Epoch: [37/50] Loss: 5.1458: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [38/50] Loss: 5.1410: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [39/50] Loss: 5.0975: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [40/50] Loss: 5.1050: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [41/50] Loss: 5.0510: 100%|████████| 19/19 [00:11<00:00,  1.61it/s]
+Train Epoch: [42/50] Loss: 5.0870: 100%|████████| 19/19 [00:11<00:00,  1.63it/s]
+Train Epoch: [43/50] Loss: 5.0510: 100%|████████| 19/19 [00:11<00:00,  1.63it/s]
+Train Epoch: [44/50] Loss: 5.0177: 100%|████████| 19/19 [00:11<00:00,  1.64it/s]
+Train Epoch: [45/50] Loss: 5.0044: 100%|████████| 19/19 [00:11<00:00,  1.65it/s]
+Train Epoch: [46/50] Loss: 4.9775: 100%|████████| 19/19 [00:11<00:00,  1.63it/s]
+Train Epoch: [47/50] Loss: 4.9483: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [48/50] Loss: 4.9545: 100%|████████| 19/19 [00:11<00:00,  1.63it/s]
+Train Epoch: [49/50] Loss: 4.9174: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+Train Epoch: [50/50] Loss: 4.9083: 100%|████████| 19/19 [00:11<00:00,  1.62it/s]
+
+Model saved to results/128_0.5_200_128_50_cross_scene_model.pth
+
+=== Extracting Houston-13 Features ===
+Houston-13 features: (2530, 128)
+Saved: data/Houston13_feature.h5
+
+=== Extracting Houston-18 Train Features ===
+Houston-18 train features: (42560, 128)
+Saved: data/Houston18_feature_train.h5
+
+=== Extracting Houston-18 Test Features ===
+Houston-18 test features: (10640, 128)
+Saved: data/Houston18_feature_test.h5
+
+=== Training Complete ===
+Pretrained on: Houston-13 (2530 samples)
+Features extracted for:
+  - Houston-13: 2530 (Exp1 few-shot source)
+  - Houston-18 Train: 42560 (Exp2 few-shot source)
+  - Houston-18 Test: 10640 (evaluation)
+
+✅ Pretraining on H13 + Feature Extraction completed in 627.73 seconds
+
+======================================================================
+  STEP: Evaluation (Exp1 Zero-shot + Exp2 Few-shot)
+======================================================================
+
+=== Loading Features ===
+Houston-13 features: (2530, 128)
+Houston-13 labels: (2530,), range: 0-6
+Houston-18 Train features: (42560, 128)
+Houston-18 Train labels: (42560,), range: 0-6
+Houston-18 Test features: (10640, 128)
+Houston-18 Test labels: (10640,), range: 0-6
+
+======================================================================
+  EXPERIMENT 1: Zero-shot (Few-shots from Houston-13)
+======================================================================
+
+============================================================
+=== 1-shot ===
+============================================================
+Few-shot samples: 7
+Classes sampled: 7
+1-shot: fixed SVM params (C=0.1, gamma='scale')
+Training time: 0.00s
+
+Confusion Matrix:
+[[   0   11   41   51   80   70   18]
+ [   0  150   78  100  287  178  185]
+ [   0   17   86  191   80   66  113]
+ [   0    0    1    3    0    0    0]
+ [   0    8  209  337  193  201  121]
+ [   0  348  904  434 3267 1152  387]
+ [   2   80  223  146  391  326  105]]
+
+OA = 15.87%
+[[   0   11   41   51   80   70   18]
+ [   0  150   78  100  287  178  185]
+ [   0   17   86  191   80   66  113]
+ [   0    0    1    3    0    0    0]
+ [   0    8  209  337  193  201  121]
+ [   0  348  904  434 3267 1152  387]
+ [   2   80  223  146  391  326  105]]
+Pe =  0.1782052317117983
+[2.000e+00 6.140e+02 1.542e+03 1.262e+03 4.298e+03 1.993e+03 9.290e+02]
+[ 0.        24.429968   5.5771723  0.2377179  4.490461  57.802307
+ 11.302476 ]
+AA:  14.834299683570862
+AA = 14.83%
+Kappa = -2.37%
+Prediction time: 0.02s
+
+============================================================
+=== 5-shot ===
+============================================================
+Few-shot samples: 35
+Classes sampled: 7
+Using 3-fold CV
+Training time: 0.60s
+Best params: {'C': 8.0, 'gamma': 0.25}
+Best CV score: 0.3990
+
+Confusion Matrix:
+[[   1   10  126   65   34   22   13]
+ [   5  182  262  207  134   54  134]
+ [   0    7  116  318   63   19   30]
+ [   0    0    0    4    0    0    0]
+ [   1    4  261  497  172   96   38]
+ [   6   24 2249  843  759 1412 1199]
+ [   7   10  488  239  118  236  175]]
+
+OA = 19.38%
+[[   1   10  126   65   34   22   13]
+ [   5  182  262  207  134   54  134]
+ [   0    7  116  318   63   19   30]
+ [   0    0    0    4    0    0    0]
+ [   1    4  261  497  172   96   38]
+ [   6   24 2249  843  759 1412 1199]
+ [   7   10  488  239  118  236  175]]
+Pe =  0.15469014111877438
+[  20.  237. 3502. 2173. 1280. 1839. 1589.]
+[ 5.         76.79325     3.312393    0.18407732 13.437501   76.78086
+ 11.013216  ]
+AA:  26.645898818969727
+AA = 26.65%
+Kappa = 4.63%
+Prediction time: 0.06s
+
+============================================================
+=== 10-shot ===
+============================================================
+Few-shot samples: 70
+Classes sampled: 7
+Using 3-fold CV (10-shot: lower C range)
+Training time: 0.35s
+Best params: {'C': 1.0, 'gamma': 4.0}
+Best CV score: 0.4432
+
+Confusion Matrix:
+[[  42    9   51   75   61   26    7]
+ [  84  168  191  113  188  154   80]
+ [  44    0  281   85   99   12   32]
+ [   1    0    3    0    0    0    0]
+ [ 131    0  451  186  235   45   21]
+ [1088    0 1114 1168  683 2328  111]
+ [ 297    1  314  197  219  185   60]]
+
+OA = 29.27%
+[[  42    9   51   75   61   26    7]
+ [  84  168  191  113  188  154   80]
+ [  44    0  281   85   99   12   32]
+ [   1    0    3    0    0    0    0]
+ [ 131    0  451  186  235   45   21]
+ [1088    0 1114 1168  683 2328  111]
+ [ 297    1  314  197  219  185   60]]
+Pe =  0.19260636907117418
+[1687.  178. 2405. 1824. 1485. 2750.  311.]
+[ 2.4896266 94.38203   11.683991   0.        15.824916  84.65455
+ 19.292604 ]
+AA:  32.618242502212524
+AA = 32.62%
+Kappa = 12.39%
+Prediction time: 0.10s
+
+======================================================================
+  EXPERIMENT 2: Few-shot (Few-shots from Houston-18 Train)
+======================================================================
+
+============================================================
+=== 1-shot ===
+============================================================
+Few-shot samples: 7
+Classes sampled: 7
+1-shot: fixed SVM params (C=0.1, gamma='scale')
+Training time: 0.00s
+
+Confusion Matrix:
+[[  25    9   33   64   53   74   13]
+ [  86   68   87  399   87  175   76]
+ [  23    7  112  268   62   61   20]
+ [   0    0    1    3    0    0    0]
+ [  14   39  231  398  212  157   18]
+ [1307  360  325  804  715 1826 1155]
+ [ 183   71  118  222  223  383   73]]
+
+OA = 21.80%
+[[  25    9   33   64   53   74   13]
+ [  86   68   87  399   87  175   76]
+ [  23    7  112  268   62   61   20]
+ [   0    0    1    3    0    0    0]
+ [  14   39  231  398  212  157   18]
+ [1307  360  325  804  715 1826 1155]
+ [ 183   71  118  222  223  383   73]]
+Pe =  0.194671723952739
+[1638.  554.  907. 2158. 1352. 2676. 1355.]
+[ 1.5262516  12.274368   12.348402    0.13901761 15.680474   68.236176
+  5.3874536 ]
+AA:  16.5131613612175
+AA = 16.51%
+Kappa = 2.89%
+Prediction time: 0.02s
+
+============================================================
+=== 5-shot ===
+============================================================
+Few-shot samples: 35
+Classes sampled: 7
+Using 3-fold CV
+Training time: 0.62s
+Best params: {'C': 128.0, 'gamma': 0.5}
+Best CV score: 0.3106
+
+Confusion Matrix:
+[[  46   67   42   21   29   54   12]
+ [  26  329  248  100   49  174   52]
+ [  28  169  240   12   30   58   16]
+ [   1    0    0    3    0    0    0]
+ [  47  408  285   68  142   78   41]
+ [ 623  828 1037  697  387 1890 1030]
+ [ 169  241  256  119  157  238   93]]
+
+OA = 25.78%
+[[  46   67   42   21   29   54   12]
+ [  26  329  248  100   49  174   52]
+ [  28  169  240   12   30   58   16]
+ [   1    0    0    3    0    0    0]
+ [  47  408  285   68  142   78   41]
+ [ 623  828 1037  697  387 1890 1030]
+ [ 169  241  256  119  157  238   93]]
+Pe =  0.19461319534739102
+[ 940. 2042. 2108. 1020.  794. 2492. 1244.]
+[ 4.893617   16.111656   11.3852      0.29411766 17.88413    75.8427
+  7.4758844 ]
+AA:  19.126757979393005
+AA = 19.13%
+Kappa = 7.85%
+Prediction time: 0.05s
+
+============================================================
+=== 10-shot ===
+============================================================
+Few-shot samples: 70
+Classes sampled: 7
+Using 3-fold CV (10-shot: lower C range)
+Training time: 0.35s
+Best params: {'C': 16.0, 'gamma': 4.0}
+Best CV score: 0.3152
+
+Confusion Matrix:
+[[  94   36   39   14   18   37   33]
+ [ 200  285   94   21   62  259   57]
+ [  94   82  197   21   66   61   32]
+ [   0    0    0    4    0    0    0]
+ [ 207  124  218   84  220  134   82]
+ [1599  637  851  475  362 1591  977]
+ [ 290  165  185   89  142  213  189]]
+
+OA = 24.25%
+[[  94   36   39   14   18   37   33]
+ [ 200  285   94   21   62  259   57]
+ [  94   82  197   21   66   61   32]
+ [   0    0    0    4    0    0    0]
+ [ 207  124  218   84  220  134   82]
+ [1599  637  851  475  362 1591  977]
+ [ 290  165  185   89  142  213  189]]
+Pe =  0.1804165901124993
+[2484. 1329. 1584.  708.  870. 2295. 1370.]
+[ 3.7842193  21.444695   12.436869    0.56497175 25.287357   69.324615
+ 13.79562   ]
+AA:  20.94833552837372
+AA = 20.95%
+Kappa = 7.57%
+Prediction time: 0.09s
+
+======================================================================
+  FINAL RESULTS SUMMARY
+======================================================================
+
+=== EXPERIMENT 1: Zero-shot (Few-shots from Houston-13) ===
+
+Shots      OA (%)          AA (%)          Kappa (%)      
+-------------------------------------------------------
+1          15.87           14.83           -2.37          
+5          19.38           26.65           4.63           
+10         29.27           32.62           12.39          
+
+=== EXPERIMENT 2: Few-shot (Few-shots from Houston-18 Train) ===
+
+Shots      OA (%)          AA (%)          Kappa (%)      
+-------------------------------------------------------
+1          21.80           16.51           2.89           
+5          25.78           19.13           7.85           
+10         24.25           20.95           7.57           
+
+Results saved to CrossScene/CrossScene_results.txt
+=== Evaluation Complete ===
+
+✅ Evaluation (Exp1 Zero-shot + Exp2 Few-shot) completed in 3.16 seconds
+
+======================================================================
+  PIPELINE COMPLETE!
+======================================================================
+
+⏱️  Time Summary:
+   - Data Generation:    11.96s
+   - Pretraining:        627.73s
+   - Evaluation:         3.16s
+   - TOTAL:              642.84s (10.71 min)
+
+📁 Output Files:
+   - data/Houston13_pretrain.h5     (H13 patches for pretrain)
+   - data/Houston18_train.h5        (H18 train patches)
+   - data/Houston18_test.h5         (H18 test patches)
+   - data/Houston13_feature.h5      (H13 features - Exp1)
+   - data/Houston18_feature_train.h5 (H18 train features - Exp2)
+   - data/Houston18_feature_test.h5 (H18 test features)
+   - results/*_cross_scene_model.pth (Trained model)
+   - CrossScene/CrossScene_results.txt (Results)
+
+======================================================================
+  Check CrossScene/CrossScene_results.txt for final metrics!
+======================================================================

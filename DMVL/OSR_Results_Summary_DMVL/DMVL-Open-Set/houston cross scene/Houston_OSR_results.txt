@@ -1,0 +1,32 @@
+DMVL Open Set Recognition — Cross-Scene (Houston 2013 → 2018)
+=================================================================
+
+Feature dim      : 128
+N_UNKNOWN        : 3
+MIN_TEST_PX      : 50
+ALWAYS_KNOWN     : [3]
+Seeds            : [42, 123, 456, 789, 1024]
+Eligible unknowns: [0, 1, 2, 4, 5, 6]
+Num splits       : 20
+Total time       : 162.9s
+
+=== zero-shot (H13 -> H18) ===
+   1-shot AUROC: 48.99 ± 2.59 (seeds), ± 5.12 (splits)
+   5-shot AUROC: 50.73 ± 2.85 (seeds), ± 4.24 (splits)
+  10-shot AUROC: 52.41 ± 4.11 (seeds), ± 5.88 (splits)
+
+=== adaptation (H18 -> H18) ===
+   1-shot AUROC: 50.31 ± 1.39 (seeds), ± 5.08 (splits)
+   5-shot AUROC: 54.68 ± 1.91 (seeds), ± 10.35 (splits)
+  10-shot AUROC: 52.98 ± 1.27 (seeds), ± 10.60 (splits)
+
+======================================================================
+  Starting MSP Open-Set Evaluation
+======================================================================
+
+[encoder] [zero-shot (H13 -> H18)]  1-shot class-balanced AUROC 48.99 ± 2.59 (seeds), ± 5.12 (splits) | known acc 27.24
+[encoder] [zero-shot (H13 -> H18)]  5-shot class-balanced AUROC 50.73 ± 2.85 (seeds), ± 4.24 (splits) | known acc 33.06
+[encoder] [zero-shot (H13 -> H18)] 10-shot class-balanced AUROC 52.41 ± 4.11 (seeds), ± 5.88 (splits) | known acc 30.06
+[encoder] [adaptation (H18 -> H18)]  1-shot class-balanced AUROC 50.31 ± 1.39 (seeds), ± 5.08 (splits) | known acc 29.57
+[encoder] [adaptation (H18 -> H18)]  5-shot class-balanced AUROC 54.68 ± 1.91 (seeds), ± 10.35 (splits) | known acc 41.23
+[encoder] [adaptation (H18 -> H18)] 10-shot class-balanced AUROC 52.98 ± 1.27 (seeds), ± 10.60 (splits) | known acc 42.37

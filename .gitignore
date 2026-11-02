@@ -1,0 +1,9 @@
+.venv/
+.playwright-mcp/
+.claude/
+FewShot-HSI-ImgClassification.zip
+
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+

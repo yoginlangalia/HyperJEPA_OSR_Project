@@ -1,0 +1,38 @@
+DMVL HyRank Results
+Seed: 42
+Number of classes: 12
+Test samples: 2064
+
+=== EXPERIMENT 1: Zero-shot (Few-shots from Dioni) ===
+
+1-shot:
+  OA: 25.58%
+  AA: 24.09%
+  Kappa: 20.30%
+
+5-shot:
+  OA: 30.96%
+  AA: 28.30%
+  Kappa: 24.36%
+
+10-shot:
+  OA: 39.00%
+  AA: 31.96%
+  Kappa: 30.67%
+
+=== EXPERIMENT 2: Few-shot (Few-shots from Loukia Train) ===
+
+1-shot:
+  OA: 26.07%
+  AA: 27.50%
+  Kappa: 20.17%
+
+5-shot:
+  OA: 37.50%
+  AA: 35.75%
+  Kappa: 31.52%
+
+10-shot:
+  OA: 44.96%
+  AA: 48.26%
+  Kappa: 38.18%

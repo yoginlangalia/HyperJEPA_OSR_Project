@@ -1,0 +1,17 @@
+Class Index to Class Name Mapping
+========================================
+0: Healthy Grass
+1: Stressed Grass
+2: Synthetic Grass
+3: Trees
+4: Soil
+5: Water
+6: Residential
+7: Commercial
+8: Road
+9: Highway
+10: Railway
+11: Parking Lot 1
+12: Parking Lot 2
+13: Tennis Court
+14: Running Track
