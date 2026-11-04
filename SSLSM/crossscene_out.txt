@@ -1,0 +1,248 @@
+Loading Cross-Scene Dataset (Houston 2013 & 2018)...
+
+Houston 2013 - HSI shape: (210, 954, 48), Labels shape: (210, 954)
+Houston 2018 - HSI shape: (210, 954, 48), Labels shape: (210, 954)
+Value range - H13: [0.0000, 1.0000], H18: [0.0000, 1.0000]
+
+... ... PCA transformation (components=15) ... ...
+H13 after PCA: (210, 954, 15), H18 after PCA: (210, 954, 15)
+
+Creating image cubes...
+Houston-13 (Source): Creating patches from ALL labeled pixels...
+  H13 patches: 2,530 samples (100% for pre-training + Exp1 fine-tuning)
+Houston-18 (Target): Creating patches and splitting 80/20...
+  H18 Train (80%): 42,560 samples (for Exp2 fine-tuning)
+  H18 Test (20%): 10,640 samples (for testing BOTH experiments)
+
+============================================================
+CROSS-SCENE EXPERIMENT PROTOCOL
+============================================================
+Pre-training: 100% of Houston-13 (2,530 samples) - ONCE
+Exp1 (Zero-shot): Fine-tune on H13, Test on H18
+Exp2 (Few-shot): Fine-tune on H18, Test on H18
+============================================================
+
+============================================================
+RUN 1/1
+============================================================
+
+=== PRE-TRAINING on Houston-13 (100%) ===
+Pre-training samples: 2,530 | Total epochs: 200 | Batch size: 64
+  Epoch [20/200] - Time: 22.89s
+  Epoch [40/200] - Time: 44.86s
+  Epoch [60/200] - Time: 66.72s
+  Epoch [80/200] - Time: 88.66s
+  Epoch [100/200] - Time: 110.53s
+  Epoch [120/200] - Time: 132.26s
+  Epoch [140/200] - Time: 154.04s
+  Epoch [160/200] - Time: 175.86s
+  Epoch [180/200] - Time: 197.64s
+  Epoch [200/200] - Time: 219.43s
+Pre-training completed in 219.44s
+
+=== EXPERIMENT 1: Zero-Shot (Fine-tune on H13, Test on H18) ===
+
+--- Zero-Shot: 1 samples/class from H13 ---
+patch_size为15时的第0次运行微调阶段完成 (1 samples per class)
+
+--- Zero-Shot: 5 samples/class from H13 ---
+patch_size为15时的第0次运行微调阶段完成 (5 samples per class)
+
+--- Zero-Shot: 10 samples/class from H13 ---
+patch_size为15时的第0次运行微调阶段完成 (10 samples per class)
+
+=== EXPERIMENT 2: Few-Shot (Fine-tune on H18, Test on H18) ===
+
+--- Few-Shot: 1 samples/class from H18 ---
+patch_size为15时的第0次运行微调阶段完成 (1 samples per class)
+
+--- Few-Shot: 5 samples/class from H18 ---
+patch_size为15时的第0次运行微调阶段完成 (5 samples per class)
+
+--- Few-Shot: 10 samples/class from H18 ---
+patch_size为15时的第0次运行微调阶段完成 (10 samples per class)
+
+============================================================
+EXPERIMENT 1: ZERO-SHOT TRANSFER (H13 -> H18)
+============================================================
+
+=== Exp1 Run 1: 1 samples/class (H13->H18) ===
+class:0 ,0.0000
+class:1 ,0.0307
+class:2 ,0.2260
+class:3 ,1.0000
+class:4 ,0.6333
+class:5 ,0.1024
+class:6 ,0.0086
+AA,0.2859
+ kappa,0.0368
+ OA,0.1421
+ F1,0.1461
+ fine_time,2.2445
+
+=== Exp1 Run 1: 5 samples/class (H13->H18) ===
+class:0 ,0.0332
+class:1 ,0.0675
+class:2 ,0.3472
+class:3 ,1.0000
+class:4 ,0.3592
+class:5 ,0.2535
+class:6 ,0.4273
+AA,0.3554
+ kappa,0.1140
+ OA,0.2674
+ F1,0.3172
+ fine_time,2.5226
+
+=== Exp1 Run 1: 10 samples/class (H13->H18) ===
+class:0 ,0.2140
+class:1 ,0.0603
+class:2 ,0.2911
+class:3 ,0.7500
+class:4 ,0.2451
+class:5 ,0.4157
+class:6 ,0.7007
+AA,0.3824
+ kappa,0.1843
+ OA,0.3885
+ F1,0.4315
+ fine_time,5.7402
+
+============================================================
+EXPERIMENT 2: FEW-SHOT TRANSFER (H18 -> H18)
+============================================================
+
+=== Exp2 Run 1: 1 samples/class (H18->H18) ===
+class:0 ,0.1181
+class:1 ,0.0399
+class:2 ,0.3707
+class:3 ,0.7500
+class:4 ,0.3424
+class:5 ,0.0578
+class:6 ,0.2930
+AA,0.2817
+ kappa,0.0348
+ OA,0.1309
+ F1,0.1268
+ fine_time,2.2387
+
+=== Exp2 Run 1: 5 samples/class (H18->H18) ===
+class:0 ,0.2657
+class:1 ,0.3149
+class:2 ,0.3327
+class:3 ,1.0000
+class:4 ,0.3714
+class:5 ,0.2887
+class:6 ,0.3236
+AA,0.4139
+ kappa,0.1233
+ OA,0.3055
+ F1,0.3462
+ fine_time,2.5556
+
+=== Exp2 Run 1: 10 samples/class (H18->H18) ===
+class:0 ,0.4022
+class:1 ,0.2526
+class:2 ,0.1013
+class:3 ,1.0000
+class:4 ,0.2862
+class:5 ,0.4638
+class:6 ,0.6693
+AA,0.4536
+ kappa,0.2094
+ OA,0.4309
+ F1,0.4660
+ fine_time,5.6802
+pre_train_time,219.4408
+
+============================================================
+AVERAGE RESULTS (across 1 runs)
+============================================================
+
+--- EXPERIMENT 1: Zero-Shot (H13 -> H18) ---
+
+1 samples/class:
+avg_ca:0 ,0.0000
+avg_ca:1 ,0.0307
+avg_ca:2 ,0.2260
+avg_ca:3 ,1.0000
+avg_ca:4 ,0.6333
+avg_ca:5 ,0.1024
+avg_ca:6 ,0.0086
+avg_aa,0.2859
+avg_kappa,0.0368
+avg_oa,0.1421
+avg_f1,0.1461
+avg_time,221.6853
+
+5 samples/class:
+avg_ca:0 ,0.0332
+avg_ca:1 ,0.0675
+avg_ca:2 ,0.3472
+avg_ca:3 ,1.0000
+avg_ca:4 ,0.3592
+avg_ca:5 ,0.2535
+avg_ca:6 ,0.4273
+avg_aa,0.3554
+avg_kappa,0.1140
+avg_oa,0.2674
+avg_f1,0.3172
+avg_time,221.9634
+
+10 samples/class:
+avg_ca:0 ,0.2140
+avg_ca:1 ,0.0603
+avg_ca:2 ,0.2911
+avg_ca:3 ,0.7500
+avg_ca:4 ,0.2451
+avg_ca:5 ,0.4157
+avg_ca:6 ,0.7007
+avg_aa,0.3824
+avg_kappa,0.1843
+avg_oa,0.3885
+avg_f1,0.4315
+avg_time,225.1810
+
+--- EXPERIMENT 2: Few-Shot (H18 -> H18) ---
+
+1 samples/class:
+avg_ca:0 ,0.1181
+avg_ca:1 ,0.0399
+avg_ca:2 ,0.3707
+avg_ca:3 ,0.7500
+avg_ca:4 ,0.3424
+avg_ca:5 ,0.0578
+avg_ca:6 ,0.2930
+avg_aa,0.2817
+avg_kappa,0.0348
+avg_oa,0.1309
+avg_f1,0.1268
+avg_time,221.6795
+
+5 samples/class:
+avg_ca:0 ,0.2657
+avg_ca:1 ,0.3149
+avg_ca:2 ,0.3327
+avg_ca:3 ,1.0000
+avg_ca:4 ,0.3714
+avg_ca:5 ,0.2887
+avg_ca:6 ,0.3236
+avg_aa,0.4139
+avg_kappa,0.1233
+avg_oa,0.3055
+avg_f1,0.3462
+avg_time,221.9964
+
+10 samples/class:
+avg_ca:0 ,0.4022
+avg_ca:1 ,0.2526
+avg_ca:2 ,0.1013
+avg_ca:3 ,1.0000
+avg_ca:4 ,0.2862
+avg_ca:5 ,0.4638
+avg_ca:6 ,0.6693
+avg_aa,0.4536
+avg_kappa,0.2094
+avg_oa,0.4309
+avg_f1,0.4660
+avg_time,225.1210

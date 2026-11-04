@@ -1,0 +1,9 @@
+# GGCL for Houston Dataset - Requirements
+# For Kaggle, most of these are pre-installed
+
+torch>=1.9.0
+numpy>=1.19.0
+scipy>=1.5.0
+scikit-learn>=0.24.0
+tqdm>=4.50.0
+einops>=0.3.0

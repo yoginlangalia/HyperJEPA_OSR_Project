@@ -1,0 +1,164 @@
+Hyperspectral data shape:  (349, 1905, 144)
+TR (Training labels) shape:  (349, 1905)
+TE (Test labels) shape:  (349, 1905)
+
+... ... PCA tranformation ... ...
+Data shape after PCA:  (349, 1905, 15)
+
+Creating image cubes...
+Creating image cubes for TR (used for pre-training and fine-tuning)...
+  TR patches: 2,832 samples
+Creating image cubes for TE (used for testing)...
+  TE patches: 12,197 samples
+Pre-training with 2,832 samples (100% of TR)
+patch_size为15时的第0次运行自训练阶段完成
+
+=== Fine-tuning with 1 samples per class ===
+patch_size为15时的第0次运行微调阶段完成 (1 samples per class)
+
+=== Fine-tuning with 5 samples per class ===
+patch_size为15时的第0次运行微调阶段完成 (5 samples per class)
+
+=== Fine-tuning with 10 samples per class ===
+patch_size为15时的第0次运行微调阶段完成 (10 samples per class)
+
+=== Run 1: Results with 1 samples per class ===
+class:0 ,0.1776
+class:1 ,0.2180
+class:2 ,0.2198
+class:3 ,0.3636
+class:4 ,0.2140
+class:5 ,0.6364
+class:6 ,0.6119
+class:7 ,0.1842
+class:8 ,0.2559
+class:9 ,0.2790
+class:10,0.2486
+class:11,0.1249
+class:12,0.9263
+class:13,0.5101
+class:14,0.4841
+class:15,0.0000
+AA,0.3409
+ kappa,0.2512
+ OA,0.2994
+ F1,0.3097
+ fine_time,2.3582
+
+=== Run 1: Results with 5 samples per class ===
+class:0 ,0.1747
+class:1 ,0.3111
+class:2 ,0.1960
+class:3 ,0.5028
+class:4 ,0.4479
+class:5 ,0.3636
+class:6 ,0.7341
+class:7 ,0.4568
+class:8 ,0.4344
+class:9 ,0.4247
+class:10,0.4032
+class:11,0.1912
+class:12,0.9544
+class:13,0.9595
+class:14,0.7717
+class:15,0.0000
+AA,0.4579
+ kappa,0.3926
+ OA,0.4375
+ F1,0.4366
+ fine_time,5.8433
+
+=== Run 1: Results with 10 samples per class ===
+class:0 ,0.1415
+class:1 ,0.4295
+class:2 ,0.1941
+class:3 ,0.4536
+class:4 ,0.5407
+class:5 ,0.4476
+class:6 ,0.8022
+class:7 ,0.6268
+class:8 ,0.4164
+class:9 ,0.4266
+class:10,0.5171
+class:11,0.4505
+class:12,0.9158
+class:13,0.8219
+class:14,0.6871
+class:15,0.0000
+AA,0.4920
+ kappa,0.4503
+ OA,0.4939
+ F1,0.4905
+ fine_time,9.2749
+pre_train_time,233.0236
+
+=== Average Results (across 1 runs) ===
+
+--- Average Results with 1 samples per class ---
+total_ca:0 ,0.1776
+total_ca:1 ,0.2180
+total_ca:2 ,0.2198
+total_ca:3 ,0.3636
+total_ca:4 ,0.2140
+total_ca:5 ,0.6364
+total_ca:6 ,0.6119
+total_ca:7 ,0.1842
+total_ca:8 ,0.2559
+total_ca:9 ,0.2790
+total_ca:10,0.2486
+total_ca:11,0.1249
+total_ca:12,0.9263
+total_ca:13,0.5101
+total_ca:14,0.4841
+total_ca:15,0.0000
+average_aa,0.3409
+ average_kappa,0.2512
+ average_oa,0.2994
+ average_f1,0.3097
+ average_time,235.3818
+
+--- Average Results with 5 samples per class ---
+total_ca:0 ,0.1747
+total_ca:1 ,0.3111
+total_ca:2 ,0.1960
+total_ca:3 ,0.5028
+total_ca:4 ,0.4479
+total_ca:5 ,0.3636
+total_ca:6 ,0.7341
+total_ca:7 ,0.4568
+total_ca:8 ,0.4344
+total_ca:9 ,0.4247
+total_ca:10,0.4032
+total_ca:11,0.1912
+total_ca:12,0.9544
+total_ca:13,0.9595
+total_ca:14,0.7717
+total_ca:15,0.0000
+average_aa,0.4579
+ average_kappa,0.3926
+ average_oa,0.4375
+ average_f1,0.4366
+ average_time,238.8669
+
+--- Average Results with 10 samples per class ---
+total_ca:0 ,0.1415
+total_ca:1 ,0.4295
+total_ca:2 ,0.1941
+total_ca:3 ,0.4536
+total_ca:4 ,0.5407
+total_ca:5 ,0.4476
+total_ca:6 ,0.8022
+total_ca:7 ,0.6268
+total_ca:8 ,0.4164
+total_ca:9 ,0.4266
+total_ca:10,0.5171
+total_ca:11,0.4505
+total_ca:12,0.9158
+total_ca:13,0.8219
+total_ca:14,0.6871
+total_ca:15,0.0000
+average_aa,0.4920
+ average_kappa,0.4503
+ average_oa,0.4939
+ average_f1,0.4905
+ average_time,242.2984

@@ -1,0 +1,162 @@
+Hyperspectral data shape:  (166, 600, 63)
+Ground truth labels shape:  (166, 600)
+Number of bands:  63
+
+... ... PCA transformation (whitening normalizes data) ... ...
+Data shape after PCA:  (166, 600, 63)
+
+Creating image cubes...
+  Full patches: 30,214 samples
+Creating 80/20 train/test split...
+  Training patches (TR): 24,171 samples
+  Test patches (TE): 6,043 samples
+
+=== Run 1/1: Starting Pre-training ===
+Pre-training samples: 24,171 | Total epochs: 200 | Batch size: 64
+  Epoch [10/200] - Time: 284.36s
+  Epoch [20/200] - Time: 568.19s
+  Epoch [30/200] - Time: 852.02s
+  Epoch [40/200] - Time: 1135.92s
+  Epoch [50/200] - Time: 1419.81s
+  Epoch [60/200] - Time: 1704.15s
+  Epoch [70/200] - Time: 1987.99s
+  Epoch [80/200] - Time: 2272.34s
+  Epoch [90/200] - Time: 2556.13s
+  Epoch [100/200] - Time: 2839.92s
+  Epoch [110/200] - Time: 3123.75s
+  Epoch [120/200] - Time: 3407.61s
+  Epoch [130/200] - Time: 3691.43s
+  Epoch [140/200] - Time: 3975.49s
+  Epoch [150/200] - Time: 4259.08s
+  Epoch [160/200] - Time: 4542.89s
+  Epoch [170/200] - Time: 4826.29s
+  Epoch [180/200] - Time: 5109.85s
+  Epoch [190/200] - Time: 5393.41s
+  Epoch [200/200] - Time: 5677.06s
+patch_size为15时的第0次运行自训练阶段完成 (Time: 5677.09s)
+
+=== Fine-tuning with 1 samples per class ===
+  Fine-tuning: 6 samples | Test: 6,043 samples | Epochs: 100
+    Fine-tuning Epoch [10/100] - Time: 0.33s
+    Fine-tuning Epoch [20/100] - Time: 0.62s
+    Fine-tuning Epoch [30/100] - Time: 0.91s
+    Fine-tuning Epoch [40/100] - Time: 1.20s
+    Fine-tuning Epoch [50/100] - Time: 1.48s
+    Fine-tuning Epoch [60/100] - Time: 1.77s
+    Fine-tuning Epoch [70/100] - Time: 2.06s
+    Fine-tuning Epoch [80/100] - Time: 2.34s
+    Fine-tuning Epoch [90/100] - Time: 2.64s
+    Fine-tuning Epoch [100/100] - Time: 2.92s
+  Testing on 6,043 samples...
+patch_size为15时的第0次运行微调阶段完成 (1 samples per class)
+
+=== Fine-tuning with 5 samples per class ===
+  Fine-tuning: 30 samples | Test: 6,043 samples | Epochs: 100
+    Fine-tuning Epoch [10/100] - Time: 0.56s
+    Fine-tuning Epoch [20/100] - Time: 1.25s
+    Fine-tuning Epoch [30/100] - Time: 1.86s
+    Fine-tuning Epoch [40/100] - Time: 2.48s
+    Fine-tuning Epoch [50/100] - Time: 3.10s
+    Fine-tuning Epoch [60/100] - Time: 3.71s
+    Fine-tuning Epoch [70/100] - Time: 4.32s
+    Fine-tuning Epoch [80/100] - Time: 4.94s
+    Fine-tuning Epoch [90/100] - Time: 5.56s
+    Fine-tuning Epoch [100/100] - Time: 6.17s
+  Testing on 6,043 samples...
+patch_size为15时的第0次运行微调阶段完成 (5 samples per class)
+
+=== Fine-tuning with 10 samples per class ===
+  Fine-tuning: 60 samples | Test: 6,043 samples | Epochs: 100
+    Fine-tuning Epoch [10/100] - Time: 0.98s
+    Fine-tuning Epoch [20/100] - Time: 2.12s
+    Fine-tuning Epoch [30/100] - Time: 3.21s
+    Fine-tuning Epoch [40/100] - Time: 4.29s
+    Fine-tuning Epoch [50/100] - Time: 5.38s
+    Fine-tuning Epoch [60/100] - Time: 6.47s
+    Fine-tuning Epoch [70/100] - Time: 7.57s
+    Fine-tuning Epoch [80/100] - Time: 8.65s
+    Fine-tuning Epoch [90/100] - Time: 9.74s
+    Fine-tuning Epoch [100/100] - Time: 10.83s
+  Testing on 6,043 samples...
+patch_size为15时的第0次运行微调阶段完成 (10 samples per class)
+
+=== Run 1: Results with 1 samples per class ===
+class:0 ,0.3643
+class:1 ,0.3517
+class:2 ,0.7188
+class:3 ,0.2608
+class:4 ,0.7876
+class:5 ,0.1228
+AA,0.4343
+ kappa,0.2697
+ OA,0.4592
+ F1,0.4349
+ fine_time,2.9387
+
+=== Run 1: Results with 5 samples per class ===
+class:0 ,0.8798
+class:1 ,0.7138
+class:2 ,0.9896
+class:3 ,0.9112
+class:4 ,0.8690
+class:5 ,0.6047
+AA,0.8280
+ kappa,0.7909
+ OA,0.8425
+ F1,0.8424
+ fine_time,6.2351
+
+=== Run 1: Results with 10 samples per class ===
+class:0 ,0.9480
+class:1 ,0.7379
+class:2 ,0.9792
+class:3 ,0.9978
+class:4 ,0.8957
+class:5 ,0.8094
+AA,0.8947
+ kappa,0.8807
+ OA,0.9106
+ F1,0.9103
+ fine_time,10.9587
+pre_train_time,5677.0900
+
+=== Average Results (across 1 runs) ===
+
+--- Average Results with 1 samples per class ---
+total_ca:0 ,0.3643
+total_ca:1 ,0.3517
+total_ca:2 ,0.7188
+total_ca:3 ,0.2608
+total_ca:4 ,0.7876
+total_ca:5 ,0.1228
+average_aa,0.4343
+ average_kappa,0.2697
+ average_oa,0.4592
+ average_f1,0.4349
+ average_time,5680.0287
+
+--- Average Results with 5 samples per class ---
+total_ca:0 ,0.8798
+total_ca:1 ,0.7138
+total_ca:2 ,0.9896
+total_ca:3 ,0.9112
+total_ca:4 ,0.8690
+total_ca:5 ,0.6047
+average_aa,0.8280
+ average_kappa,0.7909
+ average_oa,0.8425
+ average_f1,0.8424
+ average_time,5683.3251
+
+--- Average Results with 10 samples per class ---
+total_ca:0 ,0.9480
+total_ca:1 ,0.7379
+total_ca:2 ,0.9792
+total_ca:3 ,0.9978
+total_ca:4 ,0.8957
+total_ca:5 ,0.8094
+average_aa,0.8947
+ average_kappa,0.8807
+ average_oa,0.9106
+ average_f1,0.9103
+ average_time,5688.0487

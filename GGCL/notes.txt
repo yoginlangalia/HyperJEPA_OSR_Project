@@ -1,0 +1,60 @@
+================================================================================
+GGCL IMPLEMENTATION NOTES
+================================================================================
+
+[1] GGCL-HOUSTON (BASE)
+=======================
+SOURCE: GGCL-master -> Adapted for Houston-2013 Few-Shot
+FILES:
+  - dataloader.py: Loads houston.mat (144 bands, 15 classes). Zero-padding patches.
+  - run_kaggle.py: Auto-runs 1/5/10-shot experiments.
+  - trainer.py: Contrastive + CE Loss. Weight ramp-up enabled.
+PARAMS:
+  - Patch: 13 | PCA: None (All 144 bands)
+  - Norm: MinMax [0,1]
+  - Split: Predefined Train/Test masks
+PROTOCOL:
+  - Train: n-shot/class from Train Mask
+  - Unlabeled: Remainder of Train Mask
+  - Test: 100% of Test Mask
+KEY FEATS:
+  - No Sample Loss (Zero-padding)
+  - drop_last=False (For 1-shot stability)
+
+[2] GGCL-TRENTO
+===============
+SOURCE: GGCL-houston -> Adapted for Trento
+CHANGES:
+  - input_dim: 144 -> 63 bands
+  - classes: 15 -> 6 classes (1-6, 0=bg)
+  - Split: No masks -> Generated 80/20 Stratified Split
+PARAMS:
+  - Patch: 13 | PCA: None
+  - Norm: MinMax [0,1]
+  - Test Ratio: 0.8 (20% Train / 80% Test split logic)
+PROTOCOL:
+  - Train: n-shot/class from generated Train set
+  - Test: All of generated Test set
+KEY FEATS:
+  - Stratified Split generation
+  - Handles smaller spectral dim (63)
+
+[3] GGCL-CROSS-SCENE (NEW)
+==========================
+SOURCE: GGCL-houston -> Adapted for H13->H18 Transfer
+CHANGES:
+  - Loader: scipy.io -> h5py (for v7.3 MAT files)
+  - Classes: 7 shared classes (H13 & H18)
+  - Norm: MinMax -> Z-Score (Mean=0, Std=1) *CRITICAL*
+  - Pre-train: New Unsupervised Phase on H13
+FILES:
+  - run_kaggle.py: Pretrain -> Exp1 (Zero-Shot) -> Exp2 (Few-Shot)
+  - trainer.py: Added 'fixed_weight' (No ramp-up for pre-train)
+PARAMS:
+  - Patch: 15 (Increased) | PCA: None (48 bands)
+  - H18 Split: 80% Train / 20% Test
+  - Temp: Passed as 1.0/T (Correction)
+PROTOCOL:
+  - Phase 1: Pre-train H13 (Unlabeled, Contrastive-only, Fixed W=1)
+  - Exp 1: H13 Few-shot -> H18 Test (Zero-shot domain transfer)
+  - Exp 2: H18 Few-shot -> H18 Test (Target domain adaptation)

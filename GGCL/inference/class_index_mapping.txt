@@ -1,0 +1,18 @@
+Houston 2013 Dataset - Class Index to Name Mapping
+==================================================
+
+Class  0: Healthy Grass
+Class  1: Stressed Grass
+Class  2: Synthetic Grass
+Class  3: Trees
+Class  4: Soil
+Class  5: Water
+Class  6: Residential
+Class  7: Commercial
+Class  8: Road
+Class  9: Highway
+Class 10: Railway
+Class 11: Parking Lot 1
+Class 12: Parking Lot 2
+Class 13: Tennis Court
+Class 14: Running Track

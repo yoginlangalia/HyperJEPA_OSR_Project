@@ -1,0 +1,34 @@
+GGCL Open Set Recognition — Cross-Scene (Houston 2013 → 2018)
+=================================================================
+
+Feature dim      : 64
+N_UNKNOWN        : 3
+MIN_TEST_PX      : 50
+ALWAYS_KNOWN     : [3]
+Seeds            : [42, 123, 456, 789, 1024]
+Eligible unknowns: [0, 1, 2, 4, 5, 6]
+Num splits       : 20
+Total time       : 169.7s
+
+=== zero-shot (H13 -> H18) ===
+   1-shot AUROC: 45.98 ± 6.48 (seeds), ± 7.39 (splits) | Known Acc: 45.98%
+   5-shot AUROC: 47.20 ± 3.68 (seeds), ± 10.26 (splits) | Known Acc: 53.60%
+  10-shot AUROC: 48.75 ± 4.40 (seeds), ± 10.40 (splits) | Known Acc: 53.50%
+
+=== adaptation (H18 -> H18) ===
+   1-shot AUROC: 45.03 ± 4.23 (seeds), ± 7.40 (splits) | Known Acc: 51.07%
+   5-shot AUROC: 48.49 ± 2.96 (seeds), ± 10.09 (splits) | Known Acc: 66.51%
+  10-shot AUROC: 49.39 ± 3.13 (seeds), ± 10.35 (splits) | Known Acc: 71.27%
+
+
+
+=====================================================================
+  Starting MSP Open-Set Evaluation
+======================================================================
+
+[encoder] [zero-shot (H13 -> H18)]  1-shot class-balanced AUROC 45.98 ± 6.48 (seeds), ± 7.39 (splits) | known acc 45.98%
+[encoder] [zero-shot (H13 -> H18)]  5-shot class-balanced AUROC 47.20 ± 3.68 (seeds), ± 10.26 (splits) | known acc 53.60%
+[encoder] [zero-shot (H13 -> H18)] 10-shot class-balanced AUROC 48.75 ± 4.40 (seeds), ± 10.40 (splits) | known acc 53.50%
+[encoder] [adaptation (H18 -> H18)]  1-shot class-balanced AUROC 45.03 ± 4.23 (seeds), ± 7.40 (splits) | known acc 51.07%
+[encoder] [adaptation (H18 -> H18)]  5-shot class-balanced AUROC 48.49 ± 2.96 (seeds), ± 10.09 (splits) | known acc 66.51%
+[encoder] [adaptation (H18 -> H18)] 10-shot class-balanced AUROC 49.39 ± 3.13 (seeds), ± 10.35 (splits) | known acc 71.27%

@@ -1,0 +1,107 @@
+# SSLSM Changes Notes
+# Date: 2025-12-23
+
+## HOUSTON Changes (from SSLSM-orignial)
+- Dataset: Indian Pines → Houston
+- class_num: 16
+- EPOCH: 100 (was 100)
+- patch_size: 17 → 15
+- pca_components: 30 → 15
+- batch_size: 128 → 64
+- N_RUNS: 5 → 1
+
+### Data Loading:
+- Houston has predefined TR/TE splits in .mat file
+- Keys: 'input', 'TR', 'TE'
+- Uses applyPCA for normalization
+
+### Pretraining Protocol (NO DATA LEAKAGE):
+- OLD: 50% of (TR+TE) combined
+- NEW: 100% of TR only
+
+### Fine-tuning:
+- Uses samplePerClass() instead of ratio_fine
+- Few-shot: [1, 5, 10] samples per class from TR
+
+### Testing:
+- 100% of TE
+
+### New functions in utils.py:
+- samplePerClass()
+- weighted_f1_score()
+
+---
+
+## TRENTO Changes (from SSLSM-houston)
+- Dataset: Trento
+- class_num: 7 → 6 (labels 1-6 become 0-5 after removing bg)
+- EPOCH: 100
+- patch_size: 15
+- pca_components: 63 (all bands, but PCA whiten=True normalizes!)
+- batch_size: 64
+
+### Data Loading:
+- Trento has NO predefined TR/TE
+- Keys: 'HSI_data', 'ground'
+- CRITICAL: Must use applyPCA() even with all 63 bands
+  - whiten=True in PCA normalizes the data
+  - Without this → model predicts single class!
+
+### Pretraining Protocol:
+- Create 80/20 split using splitTrainTestSet()
+- Use 100% of TR (80% split) for pretraining
+
+### Fine-tuning:
+- Few-shot: [1, 5, 10] samples per class from TR
+
+### Testing:
+- 100% of TE (20% split)
+
+---
+
+## KEY INSIGHTS
+1. PCA whiten=True → normalizes data (critical for Trento!)
+2. Houston has predefined splits, Trento doesn't
+3. Both use: 100% TR for pretrain, few-shot from TR, test on TE
+4. class_num must match actual classes after bg removal
+
+---
+
+## CROSS-SCENE Changes (from SSLSM-houston)
+# Date: 2026-01-10
+
+- Dataset: Houston-13 (source) + Houston-18 (target)
+- class_num: 7 (labels 1-7)
+- EPOCH: 100
+- patch_size: 15
+- pca_components: 15
+- batch_size: 64
+
+### Data Loading:
+- HDF5 format → use h5py (not scipy.io.loadmat)
+- Keys: 'ori_data', 'map'
+- Must transpose after loading
+- Data pre-normalized [0,1] but still apply PCA
+
+### New function in utils.py:
+- loadCrossSceneDataset() - loads H13 + H18
+
+### Pretraining Protocol:
+- 100% of Houston-13 (ALL labeled pixels, no split)
+- Pre-training happens ONCE
+
+### Two Experiments:
+
+**Exp1 (Zero-shot):**
+- Fine-tune: 1,5,10 shots from H13
+- Test: H18 test set (20%)
+- No H18 data used in training
+
+**Exp2 (Few-shot):**
+- Fine-tune: 1,5,10 shots from H18 train (80%)
+- Test: H18 test set (20%)
+- Uses target domain samples
+
+### Data Splits:
+- Houston-13: NO SPLIT (use 100%)
+- Houston-18: 80/20 split (80% Exp2 fine-tune, 20% test both)
