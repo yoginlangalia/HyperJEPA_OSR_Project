@@ -84,23 +84,42 @@ def load_mat_flexible(fpath, candidates_data=('ori_data', 'data', 'input', 'HSI_
     raise KeyError(f"Could not find valid keys in {fpath}")
 
 
-def load_cross_scene_data(h13_path, h13_gt_path, h18_path, h18_gt_path,
+def load_cross_scene_data(h13_path, h13_gt_path=None, h18_path=None, h18_gt_path=None,
                           patch_size=15, test_ratio=0.2, seed=42):
     """
     Load Houston-13 and Houston-18, apply Z-score normalization, extract 15x15 patches,
     and split Houston-18 into 80% train and 20% test.
+    Supports both separate ground truth files and embedded labels inside H13/H18.mat.
     """
     set_seed(seed)
     
     print("Loading Houston-13...")
-    X13 = load_mat_flexible(h13_path, candidates_data=('ori_data', 'data', 'Houston13'))
-    y13 = load_mat_flexible(h13_gt_path, candidates_gt=('map', 'gt', 'Houston13_7gt'))
+    X13 = load_mat_flexible(h13_path, candidates_data=('ori_data', 'data', 'input', 'HSI_data', 'Houston13'))
+    
+    y13 = None
+    if h13_gt_path and os.path.isfile(h13_gt_path):
+        try:
+            y13 = load_mat_flexible(h13_gt_path, candidates_gt=('map', 'gt', 'ground', 'Houston13_7gt', 'labels'))
+        except Exception:
+            pass
+    if y13 is None:
+        y13 = load_mat_flexible(h13_path, candidates_gt=('map', 'gt', 'ground', 'Houston13_7gt', 'labels'))
+        
     if y13.ndim > 2:
         y13 = y13.squeeze()
         
     print("Loading Houston-18...")
-    X18 = load_mat_flexible(h18_path, candidates_data=('ori_data', 'data', 'Houston18'))
-    y18 = load_mat_flexible(h18_gt_path, candidates_gt=('map', 'gt', 'Houston18_7gt'))
+    X18 = load_mat_flexible(h18_path, candidates_data=('ori_data', 'data', 'input', 'HSI_data', 'Houston18'))
+    
+    y18 = None
+    if h18_gt_path and os.path.isfile(h18_gt_path):
+        try:
+            y18 = load_mat_flexible(h18_gt_path, candidates_gt=('map', 'gt', 'ground', 'Houston18_7gt', 'labels'))
+        except Exception:
+            pass
+    if y18 is None:
+        y18 = load_mat_flexible(h18_path, candidates_gt=('map', 'gt', 'ground', 'Houston18_7gt', 'labels'))
+        
     if y18.ndim > 2:
         y18 = y18.squeeze()
         

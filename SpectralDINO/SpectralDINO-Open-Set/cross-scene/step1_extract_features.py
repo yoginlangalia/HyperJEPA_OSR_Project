@@ -35,57 +35,71 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def resolve_dataset_file(fname, custom_dir=None, fallback_rel=None):
-    """Locate dataset file supporting fallback paths and auto-unzip."""
+    """Locate dataset file supporting recursive search across Kaggle and local dirs with auto-unzip."""
     base = os.path.basename(fname).lower()
     
+    # 1. Custom directory
     if custom_dir and os.path.isdir(custom_dir):
-        for f in os.listdir(custom_dir):
-            if f.lower() == base:
-                return os.path.join(custom_dir, f)
+        for root, _, files in os.walk(custom_dir):
+            for f in files:
+                if f.lower() == base:
+                    return os.path.join(root, f)
                 
+    # 2. Local data directory
     if os.path.isdir(DATA_DIR):
         for f in os.listdir(DATA_DIR):
             if f.lower() == base:
                 return os.path.join(DATA_DIR, f)
                 
+    # 3. Direct file path
     if os.path.isfile(fname):
         return os.path.abspath(fname)
         
+    # 4. Fallback relative path
     if fallback_rel:
         p_fb = os.path.normpath(os.path.join(SCRIPT_DIR, fallback_rel))
         if os.path.isfile(p_fb):
             return p_fb
             
-    # Search common workspace locations
-    workspace_candidates = [
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_DMVL', 'DMVL', 'DMVL-cross-scene', 'data', fname)),
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_SSLSM', 'SSLSM', 'SSLSM-crossscene', 'data', fname)),
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_GGCL', 'GGCL', 'GGCL-cross-scene-new', 'data', fname)),
-        os.path.join('/kaggle/input', fname),
-        os.path.join('/kaggle/working', fname),
+    # 5. Check and auto-extract any zip archives across possible locations
+    search_roots = [
+        DATA_DIR,
+        '/kaggle/working',
+        '/kaggle/input',
+        '.',
+        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..')),
+        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..')),
     ]
-    for c in workspace_candidates:
-        if os.path.isfile(c):
-            return c
-            
-    # Auto-extract from zip if present
-    zip_candidates = [
-        os.path.join(DATA_DIR, 'Houston-cross-scene-data.zip'),
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_DMVL', 'DMVL', 'Houston-cross-scene-data.zip')),
-    ]
-    for zpath in zip_candidates:
-        if os.path.isfile(zpath):
-            try:
-                print(f"Extracting {zpath} -> {DATA_DIR}...")
-                with zipfile.ZipFile(zpath, 'r') as zf:
-                    zf.extractall(DATA_DIR)
-                extracted = os.path.join(DATA_DIR, fname)
-                if os.path.isfile(extracted):
-                    return extracted
-            except Exception:
-                pass
-                
-    return os.path.join(DATA_DIR, fname)
+    for sdir in search_roots:
+        if not os.path.isdir(sdir):
+            continue
+        for root, _, files in os.walk(sdir):
+            for f in files:
+                if f.lower().endswith('.zip'):
+                    zpath = os.path.join(root, f)
+                    try:
+                        with zipfile.ZipFile(zpath, 'r') as zf:
+                            z_names = [zn.lower() for zn in zf.namelist()]
+                            if any(base == os.path.basename(zn).lower() for zn in z_names):
+                                print(f"⚡ Found '{fname}' inside '{zpath}'! Auto-extracting to {DATA_DIR}...")
+                                zf.extractall(DATA_DIR)
+                                for extracted in os.listdir(DATA_DIR):
+                                    if extracted.lower() == base:
+                                        return os.path.join(DATA_DIR, extracted)
+                    except Exception:
+                        pass
+
+    # 6. Recursive search in /kaggle/input and /kaggle/working
+    for target_env in ['/kaggle/input', '/kaggle/working', '.']:
+        if os.path.isdir(target_env):
+            for root, _, files in os.walk(target_env):
+                for f in files:
+                    if f.lower() == base:
+                        found = os.path.join(root, f)
+                        print(f"Auto-detected '{fname}' at: {found}")
+                        return found
+                        
+    return None
 
 
 def extract_features(model, data, labels, batch_size=64):
@@ -154,8 +168,20 @@ def main():
     # Resolve data paths
     h13_path    = resolve_dataset_file('Houston13.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-cross-scene/data/Houston13.mat')
     h13_gt_path = resolve_dataset_file('Houston13_7gt.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-cross-scene/data/Houston13_7gt.mat')
+    if not h13_gt_path or not os.path.isfile(h13_gt_path):
+        print("  Notice: Houston13_7gt.mat not found separately, using labels from Houston13.mat")
+        h13_gt_path = h13_path
+
     h18_path    = resolve_dataset_file('Houston18.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-cross-scene/data/Houston18.mat')
     h18_gt_path = resolve_dataset_file('Houston18_7gt.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-cross-scene/data/Houston18_7gt.mat')
+    if not h18_gt_path or not os.path.isfile(h18_gt_path):
+        print("  Notice: Houston18_7gt.mat not found separately, using labels from Houston18.mat")
+        h18_gt_path = h18_path
+
+    if not h13_path or not os.path.isfile(h13_path):
+        raise FileNotFoundError("Could not find Houston13.mat! Please ensure dataset is attached in Kaggle input.")
+    if not h18_path or not os.path.isfile(h18_path):
+        raise FileNotFoundError("Could not find Houston18.mat! Please ensure dataset is attached in Kaggle input.")
 
     print(f"H13 Data: {h13_path}")
     print(f"H13 GT:   {h13_gt_path}")

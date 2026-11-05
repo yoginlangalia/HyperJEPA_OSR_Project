@@ -35,56 +35,71 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def resolve_dataset_file(fname, custom_dir=None, fallback_rel=None):
-    """Locate dataset file supporting fallback paths and auto-unzip."""
+    """Locate dataset file supporting recursive search across Kaggle and local dirs with auto-unzip."""
     base = os.path.basename(fname).lower()
     
+    # 1. Custom directory
     if custom_dir and os.path.isdir(custom_dir):
-        for f in os.listdir(custom_dir):
-            if f.lower() == base:
-                return os.path.join(custom_dir, f)
+        for root, _, files in os.walk(custom_dir):
+            for f in files:
+                if f.lower() == base:
+                    return os.path.join(root, f)
                 
+    # 2. Local data directory
     if os.path.isdir(DATA_DIR):
         for f in os.listdir(DATA_DIR):
             if f.lower() == base:
                 return os.path.join(DATA_DIR, f)
                 
+    # 3. Direct file path
     if os.path.isfile(fname):
         return os.path.abspath(fname)
         
+    # 4. Fallback relative path
     if fallback_rel:
         p_fb = os.path.normpath(os.path.join(SCRIPT_DIR, fallback_rel))
         if os.path.isfile(p_fb):
             return p_fb
             
-    # Search common workspace locations
-    workspace_candidates = [
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_DMVL', 'DMVL', 'DMVL-hyrank', 'data', fname)),
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_GGCL', 'GGCL', 'GGCL-hyrank', 'data', fname)),
-        os.path.join('/kaggle/input', fname),
-        os.path.join('/kaggle/working', fname),
+    # 5. Check and auto-extract any zip archives across possible locations
+    search_roots = [
+        DATA_DIR,
+        '/kaggle/working',
+        '/kaggle/input',
+        '.',
+        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..')),
+        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..')),
     ]
-    for c in workspace_candidates:
-        if os.path.isfile(c):
-            return c
-            
-    # Auto-extract from zip if present
-    zip_candidates = [
-        os.path.join(DATA_DIR, 'HyRank-data.zip'),
-        os.path.normpath(os.path.join(SCRIPT_DIR, '..', '..', '..', 'MorphJEPA_DMVL', 'DMVL', 'HyRank-data.zip')),
-    ]
-    for zpath in zip_candidates:
-        if os.path.isfile(zpath):
-            try:
-                print(f"Extracting {zpath} -> {DATA_DIR}...")
-                with zipfile.ZipFile(zpath, 'r') as zf:
-                    zf.extractall(DATA_DIR)
-                extracted = os.path.join(DATA_DIR, fname)
-                if os.path.isfile(extracted):
-                    return extracted
-            except Exception:
-                pass
-                
-    return os.path.join(DATA_DIR, fname)
+    for sdir in search_roots:
+        if not os.path.isdir(sdir):
+            continue
+        for root, _, files in os.walk(sdir):
+            for f in files:
+                if f.lower().endswith('.zip'):
+                    zpath = os.path.join(root, f)
+                    try:
+                        with zipfile.ZipFile(zpath, 'r') as zf:
+                            z_names = [zn.lower() for zn in zf.namelist()]
+                            if any(base == os.path.basename(zn).lower() for zn in z_names):
+                                print(f"⚡ Found '{fname}' inside '{zpath}'! Auto-extracting to {DATA_DIR}...")
+                                zf.extractall(DATA_DIR)
+                                for extracted in os.listdir(DATA_DIR):
+                                    if extracted.lower() == base:
+                                        return os.path.join(DATA_DIR, extracted)
+                    except Exception:
+                        pass
+
+    # 6. Recursive search in /kaggle/input and /kaggle/working
+    for target_env in ['/kaggle/input', '/kaggle/working', '.']:
+        if os.path.isdir(target_env):
+            for root, _, files in os.walk(target_env):
+                for f in files:
+                    if f.lower() == base:
+                        found = os.path.join(root, f)
+                        print(f"Auto-detected '{fname}' at: {found}")
+                        return found
+                        
+    return None
 
 
 def extract_features(model, data, labels, batch_size=64):
@@ -153,13 +168,24 @@ def main():
     # Resolve data paths
     dioni_path    = resolve_dataset_file('Dioni.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-hyrank/data/Dioni.mat')
     dioni_gt_path = resolve_dataset_file('Dioni_gt_out68.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-hyrank/data/Dioni_gt_out68.mat')
-    if not os.path.isfile(dioni_gt_path):
+    if not dioni_gt_path or not os.path.isfile(dioni_gt_path):
         dioni_gt_path = resolve_dataset_file('Dioni_gt.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-hyrank/data/Dioni_gt.mat')
+    if not dioni_gt_path or not os.path.isfile(dioni_gt_path):
+        print("  Notice: Dioni separate GT not found, using labels from Dioni.mat")
+        dioni_gt_path = dioni_path
 
     loukia_path    = resolve_dataset_file('Loukia.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-hyrank/data/Loukia.mat')
     loukia_gt_path = resolve_dataset_file('Loukia_gt_out68.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-hyrank/data/Loukia_gt_out68.mat')
-    if not os.path.isfile(loukia_gt_path):
+    if not loukia_gt_path or not os.path.isfile(loukia_gt_path):
         loukia_gt_path = resolve_dataset_file('Loukia_gt.mat', custom_dir=args.data_dir, fallback_rel='../../../../MorphJEPA_DMVL/DMVL/DMVL-hyrank/data/Loukia_gt.mat')
+    if not loukia_gt_path or not os.path.isfile(loukia_gt_path):
+        print("  Notice: Loukia separate GT not found, using labels from Loukia.mat")
+        loukia_gt_path = loukia_path
+
+    if not dioni_path or not os.path.isfile(dioni_path):
+        raise FileNotFoundError("Could not find Dioni.mat! Please ensure HyRank dataset is attached in Kaggle input.")
+    if not loukia_path or not os.path.isfile(loukia_path):
+        raise FileNotFoundError("Could not find Loukia.mat! Please ensure HyRank dataset is attached in Kaggle input.")
 
     print(f"Dioni Data:  {dioni_path}")
     print(f"Dioni GT:    {dioni_gt_path}")

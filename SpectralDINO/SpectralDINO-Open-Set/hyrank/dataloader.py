@@ -83,23 +83,42 @@ def load_mat_flexible(fpath, candidates_data=('ori_data', 'data', 'Dioni', 'Louk
     raise KeyError(f"Could not find valid keys in {fpath}")
 
 
-def load_cross_scene_data(dioni_path, dioni_gt_path, loukia_path, loukia_gt_path,
+def load_cross_scene_data(dioni_path, dioni_gt_path=None, loukia_path=None, loukia_gt_path=None,
                           patch_size=15, test_ratio=0.2, seed=42):
     """
     Load Dioni and Loukia, apply MinMax + Z-score normalization, extract 15x15 patches,
     and split Loukia into 80% train and 20% test.
+    Supports both separate ground truth files and embedded labels.
     """
     set_seed(seed)
     
     print("Loading Dioni (Source)...")
-    X_dioni = load_mat_flexible(dioni_path, candidates_data=('ori_data', 'data', 'Dioni'))
-    y_dioni = load_mat_flexible(dioni_gt_path, candidates_gt=('map', 'gt', 'Dioni_gt'))
+    X_dioni = load_mat_flexible(dioni_path, candidates_data=('ori_data', 'data', 'input', 'HSI_data', 'Dioni'))
+    
+    y_dioni = None
+    if dioni_gt_path and os.path.isfile(dioni_gt_path):
+        try:
+            y_dioni = load_mat_flexible(dioni_gt_path, candidates_gt=('map', 'gt', 'ground', 'Dioni_gt', 'labels'))
+        except Exception:
+            pass
+    if y_dioni is None:
+        y_dioni = load_mat_flexible(dioni_path, candidates_gt=('map', 'gt', 'ground', 'Dioni_gt', 'labels'))
+        
     if y_dioni.ndim > 2:
         y_dioni = y_dioni.squeeze()
         
     print("Loading Loukia (Target)...")
-    X_loukia = load_mat_flexible(loukia_path, candidates_data=('ori_data', 'data', 'Loukia'))
-    y_loukia = load_mat_flexible(loukia_gt_path, candidates_gt=('map', 'gt', 'Loukia_gt'))
+    X_loukia = load_mat_flexible(loukia_path, candidates_data=('ori_data', 'data', 'input', 'HSI_data', 'Loukia'))
+    
+    y_loukia = None
+    if loukia_gt_path and os.path.isfile(loukia_gt_path):
+        try:
+            y_loukia = load_mat_flexible(loukia_gt_path, candidates_gt=('map', 'gt', 'ground', 'Loukia_gt', 'labels'))
+        except Exception:
+            pass
+    if y_loukia is None:
+        y_loukia = load_mat_flexible(loukia_path, candidates_gt=('map', 'gt', 'ground', 'Loukia_gt', 'labels'))
+        
     if y_loukia.ndim > 2:
         y_loukia = y_loukia.squeeze()
         
