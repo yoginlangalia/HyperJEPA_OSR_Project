@@ -1,0 +1,263 @@
+/kaggle/working/spectraldino-trento-1/SpectralDINO-trento
+============================================================
+SpectralDINO Trento Experiment
+============================================================
+
+Importing modules...
+PyTorch version: 2.8.0+cu126
+CUDA available: True
+CUDA device: Tesla P100-PCIE-16GB
+SciPy version: 1.15.3
+scikit-learn available
+
+============================================================
+SpectralDINO: Dual-MoS LoRA for HSI Few-Shot Classification
+Trento Dataset - Single-Domain Experiments
+============================================================
+
+Configuration:
+  Data path: ./Datasets/Trento/trento.mat
+  Results path: /kaggle/working/results
+  Seed: 42
+  Patch size: 15x15
+  Num tokens: 16
+  LoRA rank: 4
+  Iterations: 1000
+  Shot settings: [1, 5, 10]
+  Classes: 6 (Trento)
+
+============================================================
+EXPERIMENT: 1-SHOT
+============================================================
+
+Preparing 1-shot data...
+Loading Trento dataset from: ./Datasets/Trento/trento.mat
+
+Creating 80/20 stratified train/test split (seed=42):
+  Class 1 (Apple trees): 3227 train, 807 test
+  Class 2 (Buildings): 2322 train, 581 test
+  Class 3 (Ground): 383 train, 96 test
+  Class 4 (Wood): 7298 train, 1825 test
+  Class 5 (Vineyard): 8400 train, 2101 test
+  Class 6 (Roads): 2539 train, 635 test
+  Total: 24169 train, 6045 test
+  HSI shape: (166, 600, 63)
+  Data range: [0.9279, 1.0000]
+  Number of classes: 6
+  Training samples: 24169
+  Test samples: 6045
+
+Extracting 15x15 training patches...
+  Total training patches: 24169
+Extracting 15x15 test patches...
+  Total test patches: 6045
+
+Selecting 1 labeled samples per class...
+  Selected 6 labeled samples total
+Augmenting to 200 samples per class...
+  Total augmented samples: 1200
+
+Initializing SpectralDINO trainer...
+  Model on device: cuda:0
+  Trainable parameters: 21,581,092
+
+Starting training...
+Training:  10%|█▊                | 99/1000 [00:14<01:55,  7.83it/s, loss=0.0015]
+Iteration 100: OA=78.71%, AA=65.62%, Kappa=0.7214
+Training:  20%|███▍             | 199/1000 [00:28<01:39,  8.01it/s, loss=0.0007]
+Iteration 200: OA=58.69%, AA=52.26%, Kappa=0.4886
+Training:  30%|█████            | 299/1000 [00:42<01:28,  7.96it/s, loss=0.0036]
+Iteration 300: OA=40.84%, AA=40.07%, Kappa=0.2714
+Training:  40%|██████▊          | 399/1000 [00:56<01:15,  8.00it/s, loss=0.0253]
+Iteration 400: OA=74.82%, AA=61.39%, Kappa=0.6744
+Training:  50%|████████▍        | 499/1000 [01:09<01:02,  7.97it/s, loss=0.0002]
+Iteration 500: OA=71.84%, AA=67.73%, Kappa=0.6481
+Training:  60%|██████████▏      | 599/1000 [01:23<00:50,  7.90it/s, loss=0.0001]
+Iteration 600: OA=72.82%, AA=67.57%, Kappa=0.6587
+Training:  70%|███████████▉     | 699/1000 [01:37<00:37,  7.95it/s, loss=0.0002]
+Iteration 700: OA=73.55%, AA=68.88%, Kappa=0.6681
+Training:  80%|█████████████▌   | 799/1000 [01:51<00:25,  8.00it/s, loss=0.0000]
+Iteration 800: OA=73.88%, AA=69.09%, Kappa=0.6715
+Training:  90%|███████████████▎ | 899/1000 [02:05<00:12,  8.03it/s, loss=0.0000]
+Iteration 900: OA=73.98%, AA=69.14%, Kappa=0.6726
+Training: 100%|████████████████▉| 999/1000 [02:19<00:00,  8.03it/s, loss=0.0000]
+Iteration 1000: OA=76.28%, AA=65.25%, Kappa=0.6913
+Training: 100%|████████████████| 1000/1000 [02:20<00:00,  7.12it/s, loss=0.0000]
+
+Training complete. Time: 140.41s
+
+Running final evaluation...
+
+Results:
+  OA: 76.28%
+  AA: 65.25%
+  Kappa: 0.6913
+
+Results saved to /kaggle/working/results/results_1shot.json
+Model saved to /kaggle/working/results/best_model_1shot.pth
+
+============================================================
+EXPERIMENT: 5-SHOT
+============================================================
+
+Preparing 5-shot data...
+Loading Trento dataset from: ./Datasets/Trento/trento.mat
+
+Creating 80/20 stratified train/test split (seed=42):
+  Class 1 (Apple trees): 3227 train, 807 test
+  Class 2 (Buildings): 2322 train, 581 test
+  Class 3 (Ground): 383 train, 96 test
+  Class 4 (Wood): 7298 train, 1825 test
+  Class 5 (Vineyard): 8400 train, 2101 test
+  Class 6 (Roads): 2539 train, 635 test
+  Total: 24169 train, 6045 test
+  HSI shape: (166, 600, 63)
+  Data range: [0.9279, 1.0000]
+  Number of classes: 6
+  Training samples: 24169
+  Test samples: 6045
+
+Extracting 15x15 training patches...
+  Total training patches: 24169
+Extracting 15x15 test patches...
+  Total test patches: 6045
+
+Selecting 5 labeled samples per class...
+  Selected 30 labeled samples total
+Augmenting to 200 samples per class...
+  Total augmented samples: 1200
+
+Initializing SpectralDINO trainer...
+  Model on device: cuda:0
+  Trainable parameters: 21,581,092
+
+Starting training...
+Training:  10%|█▊                | 99/1000 [00:13<02:03,  7.31it/s, loss=0.0493]
+Iteration 100: OA=60.10%, AA=55.45%, Kappa=0.4727
+Training:  20%|███▍             | 199/1000 [00:29<01:50,  7.24it/s, loss=0.0131]
+Iteration 200: OA=55.67%, AA=47.16%, Kappa=0.4380
+Training:  30%|█████            | 299/1000 [00:44<01:35,  7.36it/s, loss=0.0316]
+Iteration 300: OA=74.59%, AA=62.16%, Kappa=0.6661
+Training:  40%|██████▊          | 399/1000 [00:59<01:23,  7.23it/s, loss=0.0014]
+Iteration 400: OA=66.53%, AA=55.54%, Kappa=0.5605
+Training:  50%|████████▍        | 499/1000 [01:14<01:08,  7.29it/s, loss=0.0119]
+Iteration 500: OA=68.72%, AA=56.84%, Kappa=0.5898
+Training:  60%|██████████▏      | 599/1000 [01:29<00:55,  7.18it/s, loss=0.0004]
+Iteration 600: OA=71.91%, AA=53.89%, Kappa=0.6323
+Training:  70%|███████████▉     | 699/1000 [01:44<00:40,  7.37it/s, loss=0.0000]
+Iteration 700: OA=83.42%, AA=76.34%, Kappa=0.7856
+Training:  80%|█████████████▌   | 799/1000 [02:00<00:27,  7.34it/s, loss=0.0000]
+Iteration 800: OA=81.87%, AA=71.61%, Kappa=0.7583
+Training:  90%|███████████████▎ | 899/1000 [02:15<00:13,  7.31it/s, loss=0.0000]
+Iteration 900: OA=84.95%, AA=79.73%, Kappa=0.8047
+Training: 100%|████████████████▉| 999/1000 [02:31<00:00,  7.28it/s, loss=0.0000]
+Iteration 1000: OA=85.99%, AA=80.11%, Kappa=0.8175
+Training: 100%|████████████████| 1000/1000 [02:33<00:00,  6.54it/s, loss=0.0000]
+
+Training complete. Time: 153.00s
+
+Running final evaluation...
+
+Results:
+  OA: 85.99%
+  AA: 80.11%
+  Kappa: 0.8175
+
+Results saved to /kaggle/working/results/results_5shot.json
+Model saved to /kaggle/working/results/best_model_5shot.pth
+
+============================================================
+EXPERIMENT: 10-SHOT
+============================================================
+
+Preparing 10-shot data...
+Loading Trento dataset from: ./Datasets/Trento/trento.mat
+
+Creating 80/20 stratified train/test split (seed=42):
+  Class 1 (Apple trees): 3227 train, 807 test
+  Class 2 (Buildings): 2322 train, 581 test
+  Class 3 (Ground): 383 train, 96 test
+  Class 4 (Wood): 7298 train, 1825 test
+  Class 5 (Vineyard): 8400 train, 2101 test
+  Class 6 (Roads): 2539 train, 635 test
+  Total: 24169 train, 6045 test
+  HSI shape: (166, 600, 63)
+  Data range: [0.9279, 1.0000]
+  Number of classes: 6
+  Training samples: 24169
+  Test samples: 6045
+
+Extracting 15x15 training patches...
+  Total training patches: 24169
+Extracting 15x15 test patches...
+  Total test patches: 6045
+
+Selecting 10 labeled samples per class...
+  Selected 60 labeled samples total
+Augmenting to 200 samples per class...
+  Total augmented samples: 1200
+
+Initializing SpectralDINO trainer...
+  Model on device: cuda:0
+  Trainable parameters: 21,581,092
+
+Starting training...
+Training:  10%|█▊                | 99/1000 [00:15<02:16,  6.62it/s, loss=0.1312]
+Iteration 100: OA=74.86%, AA=60.49%, Kappa=0.6646
+Training:  20%|███▍             | 199/1000 [00:31<02:00,  6.66it/s, loss=0.1758]
+Iteration 200: OA=61.82%, AA=50.55%, Kappa=0.5081
+Training:  30%|█████            | 299/1000 [00:48<01:46,  6.57it/s, loss=0.0499]
+Iteration 300: OA=66.25%, AA=58.41%, Kappa=0.5530
+Training:  40%|██████▊          | 399/1000 [01:04<01:31,  6.57it/s, loss=0.0437]
+Iteration 400: OA=69.15%, AA=63.72%, Kappa=0.6015
+Training:  50%|████████▍        | 499/1000 [01:21<01:15,  6.67it/s, loss=0.0479]
+Iteration 500: OA=72.29%, AA=70.33%, Kappa=0.6305
+Training:  60%|██████████▏      | 599/1000 [01:37<01:00,  6.63it/s, loss=0.0056]
+Iteration 600: OA=71.99%, AA=68.84%, Kappa=0.6299
+Training:  70%|███████████▉     | 699/1000 [01:53<00:45,  6.64it/s, loss=0.0231]
+Iteration 700: OA=55.80%, AA=50.63%, Kappa=0.4322
+Training:  80%|█████████████▌   | 799/1000 [02:10<00:30,  6.66it/s, loss=0.0238]
+Iteration 800: OA=66.93%, AA=65.94%, Kappa=0.5632
+Training:  90%|███████████████▎ | 899/1000 [02:26<00:15,  6.57it/s, loss=0.0059]
+Iteration 900: OA=63.19%, AA=57.87%, Kappa=0.5273
+Training: 100%|████████████████▉| 999/1000 [02:43<00:00,  6.68it/s, loss=0.0504]
+Iteration 1000: OA=72.27%, AA=70.98%, Kappa=0.6434
+Training: 100%|████████████████| 1000/1000 [02:44<00:00,  6.08it/s, loss=0.0504]
+
+Training complete. Time: 164.59s
+
+Running final evaluation...
+
+Results:
+  OA: 72.27%
+  AA: 70.98%
+  Kappa: 0.6434
+
+Results saved to /kaggle/working/results/results_10shot.json
+Model saved to /kaggle/working/results/best_model_10shot.pth
+
+============================================================
+SUMMARY OF ALL EXPERIMENTS
+============================================================
+
+Shot       OA           AA           Kappa       
+--------------------------------------------------
+1          76.28%      65.25%      0.6913
+5          85.99%      80.11%      0.8175
+10         72.27%      70.98%      0.6434
+
+All results saved to /kaggle/working/results/all_results.json
+
+============================================================
+PER-CLASS ACCURACY (10-shot)
+============================================================
+   1. Apple trees         : 86.86%
+   2. Buildings           : 55.08%
+   3. Ground              : 78.12%
+   4. Wood                : 88.27%
+   5. Vineyard            : 62.45%
+   6. Roads               : 55.12%
+
+============================================================
+TRAINING COMPLETE!
+============================================================

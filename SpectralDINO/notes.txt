@@ -1,0 +1,42 @@
+# SpectralDINO Architecture & Adaptation Notes
+# Architecture: Dual Mixture-of-Subspaces (Dual-MoS) LoRA for HSI Few-Shot Classification
+
+## Core Model Configuration
+- Foundation Model Backbone: ViT-Small (DINOv2 architecture)
+- Base Parameters: 21,564,964
+- Total Parameters: 21,564,964 + (bands * 256)
+  - Houston Cross-Scene (48 bands, 7 classes): 21,577,252
+  - Trento (63 bands, 6 classes): 21,581,092
+  - HyRank (176 bands, 12 classes): 21,610,020
+- Patch Size: 15x15 spatial
+- Spectral Tokens: 16
+- LoRA Rank: 4
+- LoRA Experts: Dual Subspaces (Spectral & Spatial Context)
+- Iterations: 1000
+- Few-Shot Settings: [1, 5, 10] shots per class
+- Sample Augmentation: Augmented to 200 samples per class during training
+
+## Preprocessing & Normalization Protocols
+1. Houston Cross-Scene (Houston 2013 -> Houston 2018):
+   - H13: shape (210, 954, 48), 2530 labeled pixels, range [0, 1]
+   - H18: shape (210, 954, 48), 53200 labeled pixels, range [0, 1]
+   - Z-score normalization per image (H13 mean=0.0872 std=0.0573; H18 mean=0.1273 std=0.0854)
+   - 80/20 stratified train/test split for H18 (42563 train, 10637 test)
+
+2. HyRank Cross-Scene (Dioni -> Loukia):
+   - Dioni: shape (250, 1376, 176), 20024 labeled pixels, uint16 [0, 13069]
+   - Loukia: shape (249, 945, 176), 10317 labeled pixels, uint16 [0, 11590]
+   - Two-step normalization:
+     - Step 1: MinMax normalization (uint16 -> [0, 1])
+     - Step 2: Z-score normalization (Dioni mean=0.1043 std=0.0988; Loukia mean=0.1164 std=0.1184)
+   - 80/20 stratified train/test split for Loukia (8259 train, 2058 test)
+
+3. Trento (Single-Domain):
+   - Trento: shape (166, 600, 63), range [0.9279, 1.0000]
+   - Z-score normalization
+   - 80/20 stratified split (24169 train, 6045 test)
+
+## Open Set Recognition (OSR) Adaptation
+- Methodology: Maximum Softmax Probability (MSP) novelty scoring with class-balanced macro AUROC and known accuracy
+- Feature Extraction: Pre-train SpectralDINO backbone on source domain, extract L2-normalized 384-dimensional ViT CLS token representations
+- RobustProbe: 2-layer MLP classifier evaluated over 20 splits (cross-scene) / 84 splits (hyrank) across 5 random seeds
